@@ -16,8 +16,8 @@ export default defineEventHandler(async (event) => {
     return await db
       .insert(schema.votes)
       .values({
-        prompt_id: Number(prompt_id),
-        user_id: user.id,
+        promptId: Number(prompt_id),
+        userId: user.id,
       })
       .onConflictDoNothing();
   } else {
@@ -25,8 +25,8 @@ export default defineEventHandler(async (event) => {
       .delete(schema.votes)
       .where(
         and(
-          eq(schema.votes.prompt_id, Number(prompt_id)),
-          eq(schema.votes.user_id, user.id),
+          eq(schema.votes.promptId, Number(prompt_id)),
+          eq(schema.votes.userId, user.id),
         ),
       );
   }

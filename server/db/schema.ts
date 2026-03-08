@@ -32,21 +32,21 @@ export const prompts = pgTable(
   "prompts",
   {
     id: serial().primaryKey(),
-    page_id: text()
+    pageId: text("page_id")
       .references(() => pages.id)
       .notNull(),
-    user_id: integer()
+    userId: integer("user_id")
       .references(() => users.id)
       .notNull(),
     pending: boolean().notNull().default(true),
     content: text().notNull(),
     response: text(),
-    created_at: timestamp().notNull().defaultNow(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [
-    index("page_id_idx").on(table.page_id),
+    index("page_id_idx").on(table.pageId),
     uniqueIndex("pending_unique_idx")
-      .on(table.page_id, table.user_id)
+      .on(table.pageId, table.userId)
       .where(sql`${table.pending} = true`),
   ],
 );
@@ -54,12 +54,12 @@ export const prompts = pgTable(
 export const votes = pgTable(
   "votes",
   {
-    prompt_id: integer()
+    promptId: integer("prompt_id")
       .references(() => prompts.id)
       .notNull(),
-    user_id: integer()
+    userId: integer("user_id")
       .references(() => users.id)
       .notNull(),
   },
-  (table) => [primaryKey({ columns: [table.prompt_id, table.user_id] })],
+  (table) => [primaryKey({ columns: [table.promptId, table.userId] })],
 );

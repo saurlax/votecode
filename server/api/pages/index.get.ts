@@ -8,8 +8,8 @@ export default defineEventHandler(async (event) => {
       voteCount: count(schema.votes).as("voteCount"),
     })
     .from(schema.pages)
-    .leftJoin(schema.prompts, eq(schema.prompts.page_id, schema.pages.id))
-    .leftJoin(schema.votes, eq(schema.votes.prompt_id, schema.prompts.id))
+    .leftJoin(schema.prompts, eq(schema.prompts.pageId, schema.pages.id))
+    .leftJoin(schema.votes, eq(schema.votes.promptId, schema.prompts.id))
     .groupBy(schema.pages.id)
     .orderBy(desc(count(schema.votes)))
     .limit(10);

@@ -16,12 +16,12 @@ export default defineEventHandler(async (event) => {
       ...getTableColumns(schema.prompts),
       user: schema.users,
       voteCount: count(schema.votes),
-      voted: sql<boolean>`bool_or(${schema.votes.user_id} = ${user?.id ?? -1})`,
+      voted: sql<boolean>`bool_or(${schema.votes.userId} = ${user?.id ?? -1})`,
     })
     .from(schema.prompts)
-    .where(eq(schema.prompts.page_id, page_id))
+    .where(eq(schema.prompts.pageId, page_id))
     .orderBy(asc(schema.prompts.id))
-    .leftJoin(schema.users, eq(schema.prompts.user_id, schema.users.id))
-    .leftJoin(schema.votes, eq(schema.prompts.id, schema.votes.prompt_id))
+    .leftJoin(schema.users, eq(schema.prompts.userId, schema.users.id))
+    .leftJoin(schema.votes, eq(schema.prompts.id, schema.votes.promptId))
     .groupBy(schema.prompts.id, schema.users.id);
 });

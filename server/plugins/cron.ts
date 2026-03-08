@@ -47,11 +47,11 @@ async function generate(pageId: string) {
       .from(schema.prompts)
       .where(
         and(
-          eq(schema.prompts.page_id, pageId),
+          eq(schema.prompts.pageId, pageId),
           eq(schema.prompts.pending, true),
         ),
       )
-      .leftJoin(schema.votes, eq(schema.prompts.id, schema.votes.prompt_id))
+      .leftJoin(schema.votes, eq(schema.prompts.id, schema.votes.promptId))
       .groupBy(schema.prompts.id);
 
     if (!pendingPrompts[0]) {
@@ -64,18 +64,18 @@ async function generate(pageId: string) {
 
     const historyPrompts = await tx
       .select({
-        user_id: schema.prompts.user_id,
+        userId: schema.prompts.userId,
         content: schema.prompts.content,
         response: schema.prompts.response,
       })
       .from(schema.prompts)
       .where(
         and(
-          eq(schema.prompts.page_id, pageId),
+          eq(schema.prompts.pageId, pageId),
           isNotNull(schema.prompts.response),
         ),
       )
-      .orderBy(desc(schema.prompts.created_at))
+      .orderBy(desc(schema.prompts.createdAt))
       .limit(5);
 
     const { partialObjectStream } = await streamObject({
@@ -135,7 +135,7 @@ async function generate(pageId: string) {
       .set({ pending: false })
       .where(
         and(
-          eq(schema.prompts.page_id, pageId),
+          eq(schema.prompts.pageId, pageId),
           eq(schema.prompts.pending, true),
         ),
       );
@@ -154,7 +154,7 @@ async function generate(pageId: string) {
   await storage.setItem(`pages:${pageId}:refresh`, true);
 }
 
-export default defineNitroPlugin((nitroApp) => {
+export default defineNitroPlugin(() => {
   const { voteIntervalMinutes } = useAppConfig();
   const job = new CronJob("* * * * *", async () => {
     const offset = Math.floor((Date.now() / 1000 / 60) % voteIntervalMinutes);
@@ -162,7 +162,6 @@ export default defineNitroPlugin((nitroApp) => {
       .select({ id: schema.pages.id })
       .from(schema.pages)
       .where(eq(schema.pages.offset, offset));
-    console.log(`offset: ${offset}, pages: ${pages.length}`);
 
     await Promise.allSettled(
       pages.map(async (page) => {

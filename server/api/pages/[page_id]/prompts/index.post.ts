@@ -17,15 +17,15 @@ export default defineEventHandler(async (event) => {
   await db
     .insert(schema.prompts)
     .values({
-      page_id: page_id,
-      user_id: user.id,
+      pageId: page_id,
+      userId: user.id,
       content: body.content,
-      created_at: new Date(),
+      createdAt: new Date(),
     })
     .onConflictDoUpdate({
-      target: [schema.prompts.page_id, schema.prompts.user_id],
+      target: [schema.prompts.pageId, schema.prompts.userId],
       targetWhere: eq(schema.prompts.pending, true),
-      set: { content: body.content, created_at: new Date() },
+      set: { content: body.content, createdAt: new Date() },
     })
     .returning();
   storage.setItem(`pages:${page_id}:refresh`, true);
