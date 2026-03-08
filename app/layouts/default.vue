@@ -15,11 +15,10 @@ const mode = useState("mode", () => "preview");
         <UButton
           icon="i-lucide-vote"
           variant="ghost"
-          class="w-full overflow-hidden whitespace-nowrap text-ellipsis"
+          class="w-full font-bold"
           to="/"
-        >
-          <b>votecode</b><sup>by NAOSI</sup>
-        </UButton>
+          label="votecode"
+        />
       </template>
       <template #default>
         <SidebarChatMessages />
